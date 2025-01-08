@@ -21,10 +21,10 @@ typedef enum direction {
 
 /* enum containing difficulty settings for easier reference */
 typedef enum difficulty {
-    EASY,       // 0
-    MEDIUM,     // 1
-    HARD,       // 2
-    CUSTOM      // 3
+    EASY = 10,
+    MEDIUM = 40,
+    HARD = 99,
+    CUSTOM = 0     
 } difficulty_t;
 
 /* structure containing a single board cell */
@@ -45,18 +45,19 @@ typedef struct cell {
 /* structure containing the game board */
 typedef struct board {
 
-    unsigned int Height;    // height of the game board
-    unsigned int  Width;    // width of the game board
+    unsigned int Height;        // height of the game board
+    unsigned int  Width;        // width of the game board
 
-    cell_t       *Cells;    // array containing the game board's cells
+    cell_t       *Cells;        // array containing the game board's cells
+    unsigned int RevealedCells; // number of revealed cells
 
 } board_t;
 
 int generate_random_int (int Min, int Max);
 
-void print_board (board_t *Board);
+unsigned int get_cell_index (unsigned int RowIndex, unsigned int ColumnIndex, board_t *Board);
 
-void print_new (board_t *Board);
+void print_board (board_t *Board);
 
 void free_board (board_t *Board);
 
@@ -70,7 +71,11 @@ void fill_mines (board_t *Board, unsigned int MineCount, unsigned int StartingCe
 
 void count_mines (board_t *Board);
 
-int reveal (cell_t *Cell);
+int reveal (cell_t *Cell, board_t *Board);
+
+void flag_cell (cell_t *Cell);
+
+int make_move (board_t *Board, unsigned int RowIndex, unsigned int ColumnIndex);
 
 board_t *initialize_game (unsigned int BoardHeight, unsigned int BoardWidth, unsigned int StartingCellIndex, unsigned int MineCount);
 
