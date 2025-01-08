@@ -8,6 +8,21 @@ int generate_random_int (int Min, int Max) {
     return RandomRangedInt;
 }
 
+unsigned int get_cell_index (unsigned int RowIndex, unsigned int ColumnIndex, board_t *Board) {
+    
+    if (Board == NULL) {
+        fprintf(stderr, "[!] Error: Can't access game board!\n");
+        return 1;
+    }
+
+    if (RowIndex >= Board->Height || ColumnIndex >= Board->Width) {
+        fprintf(stderr, "[!] Error: Index outside of game board!\n");
+        return 1;
+    }
+
+    return RowIndex * Board->Width + ColumnIndex;
+}
+
 void print_board (board_t *Board) {
 
     if (Board == NULL) {
@@ -24,7 +39,7 @@ void print_board (board_t *Board) {
     for (int j = 0; j < Board->Height; j++) {
         for (int k = 0; k < Board->Width; k++) {
             if (Board->Cells[CurrentCell].bHasFlag == true) {
-                printf("| <> ");
+                printf("| <I ");
             } else if (Board->Cells[CurrentCell].bRevealed == false) {
                 printf("| [] ");
             } else {
@@ -46,7 +61,6 @@ void print_board (board_t *Board) {
         }
         printf("+\n");
     }
-
 }
 
 void free_board (board_t *Board) {
@@ -180,7 +194,7 @@ void count_mines (board_t *Board) {
     }
 }
 
-int reveal (cell_t *Cell) {
+int reveal (cell_t *Cell, board_t *Board) {
 
     if (Cell == NULL) {
         fprintf(stderr, "[!] Error: Can't access cell!\n");
@@ -192,6 +206,7 @@ int reveal (cell_t *Cell) {
     }
 
     Cell->bRevealed = true;
+    Board->RevealedCells += 1;
 
     if (Cell->bHasMine == true) {
         return 1;
@@ -200,12 +215,44 @@ int reveal (cell_t *Cell) {
     if (Cell->MinesAround == 0) {
         for (int i = 0; i < 8; i++) {
             if (Cell->Surroundings[i] != NULL) {
-                reveal(Cell->Surroundings[i]);
+                reveal(Cell->Surroundings[i], Board);
             }
         }
     }
 
     return 0;
+}
+
+void flag_cell (cell_t *Cell) {
+
+    if (Cell == NULL) {
+        fprintf(stderr, "[!] Error: Can't access cell!\n");
+        return;
+    }
+
+    if (Cell->bRevealed == true) {
+        fprintf(stderr, "[!] Error: Can't flag revealed cell!\n");
+        return;
+    }
+
+    if (Cell->bHasFlag == false) {
+        Cell->bHasFlag = true;
+    } else {
+        Cell->bHasFlag = false;
+    }
+}
+
+int make_move (board_t *Board, unsigned int RowIndex, unsigned int ColumnIndex) {
+
+    if (Board == NULL) {
+        fprintf(stderr, "[!] Error: Can't access game board!\n");
+        return 1;
+    }
+
+    int Temp = 0;
+    Temp += reveal(&Board->Cells[get_cell_index(RowIndex, ColumnIndex, Board)], Board);
+
+    return Temp;
 }
 
 board_t *initialize_game (unsigned int BoardHeight, unsigned int BoardWidth, unsigned int StartingCellIndex, unsigned int MineCount) {
@@ -231,7 +278,7 @@ board_t *initialize_game (unsigned int BoardHeight, unsigned int BoardWidth, uns
 
     count_mines(Board);
 
-    reveal(&Board->Cells[StartingCellIndex]);
+    reveal(&Board->Cells[StartingCellIndex], Board);
 
     return Board;
 }
