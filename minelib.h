@@ -6,6 +6,7 @@
 #include <stdbool.h>
 #include <conio.h>
 #include <Windows.h>
+#include <ctype.h>
 
 /* enum containing directions for easier reference */
 typedef enum direction {
@@ -45,12 +46,12 @@ typedef struct cell {
 /* structure containing the game board */
 typedef struct board {
 
+    bool           bWin;        // bool determining if the game has been won
     unsigned int Height;        // height of the game board
     unsigned int  Width;        // width of the game board
 
     cell_t       *Cells;        // array containing the game board's cells
-    unsigned int RevealedCells; // number of revealed cells
-
+    unsigned RevealedCells; // number of revealed cells
 } board_t;
 
 int generate_random_int (int Min, int Max);
@@ -78,5 +79,16 @@ void flag_cell (cell_t *Cell);
 int make_move (board_t *Board, unsigned int RowIndex, unsigned int ColumnIndex);
 
 board_t *initialize_game (unsigned int BoardHeight, unsigned int BoardWidth, unsigned int StartingCellIndex, unsigned int MineCount);
+
+///////////////////////////////////////////////////////////////////////////
+int score (board_t *Board, int level);
+
+int HowManyToEnd (board_t *Board, int level);
+
+void flag_mode (board_t *Board, unsigned int ColumnIndex, unsigned int RowIndex);
+
+void write_to_file (board_t* Board, int points);
+
+///////////////////////////////////////////////////////////////////////////
 
 #endif
