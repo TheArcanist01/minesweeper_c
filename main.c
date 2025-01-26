@@ -5,6 +5,21 @@ int main () {
     SetConsoleOutputCP(CP_UTF8);
     char InputBuffer[1024];
 
+    printf("Press 0 to play game, press 1 to load from file\n");
+    int FileCheck = 2;
+    while (FileCheck != 48 && FileCheck != 49) {
+        FileCheck = getch();
+    }
+
+    if (FileCheck == 49) {
+        printf("Enter file name:\n");
+        scanf("%s", InputBuffer);
+        FILE *Stream = fopen(InputBuffer, "r");
+
+        game_from_file(Stream);
+        return EXIT_SUCCESS;
+    }
+
     printf("Select difficulty:\n0 - EASY, 1 - NORMAL, 2 - HARD, 3 - CUSTOM\n");
     int Difficulty = 0;
     while (Difficulty != 48 && Difficulty != 49 && Difficulty != 50 && Difficulty != 51) {
