@@ -91,4 +91,6 @@ void write_to_file (board_t* Board, int points);
 
 ///////////////////////////////////////////////////////////////////////////
 
+void game_from_file (FILE *Stream);
+
 #endif
