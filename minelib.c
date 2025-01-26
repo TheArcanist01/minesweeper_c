@@ -143,6 +143,7 @@ board_t *generate_board (unsigned int Height, unsigned int Width) {
 
     Board->Height = Height;
     Board->Width = Width;
+    Board->bWin = false;
 
     Board->Cells = malloc(Height * Width * sizeof(cell_t));
     for (int i = 0; i < Height * Width; i++) {
@@ -246,7 +247,7 @@ int make_move (board_t *Board, unsigned int RowIndex, unsigned int ColumnIndex) 
 
     if (Board == NULL) {
         fprintf(stderr, "[!] Error: Can't access game board!\n");
-        return 1;
+        return 2;
     }
 
     int Temp = 0;
@@ -280,5 +281,46 @@ board_t *initialize_game (unsigned int BoardHeight, unsigned int BoardWidth, uns
 
     reveal(&Board->Cells[StartingCellIndex], Board);
 
+    Board->RevealedCells = 1;
+
     return Board;
+}
+
+///////////////////////////////////////////////////////////////////////////
+int score (board_t *Board, int level){
+    int score = 0;
+    for (int i=0; i<Board->Height*Board->Width; i++){
+        if (Board->Cells[i].bRevealed){
+            score++;
+        }
+    }
+    score *= (level-47);
+    printf("Your current score: %u\n", score);
+    return score;
+}
+
+int HowManyToEnd (board_t *Board, int level){
+    int sum = 0;
+    for (int i=0; i<Board->Height*Board->Width; i++){
+        if (Board->Cells[i].bRevealed){
+            sum++;
+        }
+    }
+    return sum;
+}
+
+void flag_mode (board_t *Board, unsigned int ColumnIndex, unsigned int RowIndex){
+    flag_cell(&Board->Cells[get_cell_index(RowIndex, ColumnIndex, Board)]);
+}
+
+void write_to_file (board_t* Board, int points){ // DO DOKONCZENIA
+    char FileName[100];
+    printf("Enter name of the file:\n");
+    scanf("%s", FileName);
+    FILE* file = fopen(FileName, "w");
+    if (file == NULL){
+        printf("[!] Error: Can't access file!\n");
+    }
+    fprintf(file, "%d %d", Board->bWin, points);
+    fclose(file);
 }
