@@ -324,3 +324,64 @@ void write_to_file (board_t* Board, int points){ // DO DOKONCZENIA
     fprintf(file, "%d %d", Board->bWin, points);
     fclose(file);
 }
+
+void game_from_file (FILE *Stream) {
+    if (Stream == NULL) {
+        fprintf(stderr, "[!] Error: Can't access file!\n");
+        return;
+    }
+
+    unsigned int BoardWidth = 0;
+    unsigned int BoardHeight = 0;
+
+    fscanf(Stream, "HEIGHT = %d", &BoardHeight);
+    fscanf(Stream, "\nWIDTH = %d", &BoardWidth);
+
+    if (BoardHeight <= 0 || BoardWidth <= 0) {
+        fprintf(stderr, "[!] Error: Invalid board dimensions!\n");
+        return;
+    }
+
+    char InputBuffer[1024];
+
+    fscanf(Stream, "\nMINES = %s", InputBuffer);
+
+    board_t *Board = generate_board(BoardHeight, BoardWidth);
+
+    for (int i = 0; i < strlen(InputBuffer); i++) {
+        if (InputBuffer[i] == '0') {
+            continue;
+        } else if (InputBuffer[i] == '1') {
+            Board->Cells[i].bHasMine = true;
+        } else {
+            fprintf(stderr, "[!] Error: Invalid character in mines string - must be 0 or 1!\n");
+            return;
+        }
+    }
+
+    count_mines(Board);
+
+    unsigned int RowIndex = 0;
+    unsigned int ColumnIndex = 0;
+
+    while(fscanf(Stream, "\nM %d %d", &RowIndex, &ColumnIndex) == 2) {
+        Sleep(250);
+        system("cls");
+        reveal(&Board->Cells[RowIndex * BoardWidth + ColumnIndex], Board);
+        if (Board->Cells[RowIndex * BoardWidth + ColumnIndex].bHasMine == true) {
+            print_board(Board);
+            printf("Game over!\n");
+            return;
+        } else {
+            print_board(Board);
+        }
+    }
+
+    system("cls");
+    printf("Game result:\n");
+    print_board(Board);
+
+    free_board(Board);
+
+    return;
+}
