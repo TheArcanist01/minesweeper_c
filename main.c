@@ -142,6 +142,7 @@ int main () {
                 system("cls");
                 printf("Game over!\n");
                 CurrentScore = score (Board, Difficulty);
+                int EndScore = HowManyToEnd(Board, Difficulty)*(Difficulty-47);
                 printf("Your current score: %u\n", CurrentScore);
                 for (int i = 0; i < Board->Height * Board->Width; i++) {
                     if (Board->Cells[i].bRevealed == false) {
@@ -149,6 +150,7 @@ int main () {
                     }
                 }
                 print_board(Board);
+                best_results(EndScore);
                 break;
             }
         } else if (mode == 2) {
@@ -163,12 +165,8 @@ int main () {
 
     if (HowManyToEnd(Board, Difficulty) == Board->Height * Board->Width - MineCount){
         Board->bWin = true;
+        best_results(HowManyToEnd(Board, Difficulty)*(Difficulty-47));
     }
-
-    printf("Enter your nick:\n");
-    fgets(name, 50, stdin);
-
-    write_to_file(Board, HowManyToEnd(Board, Difficulty));
 
     ///////////////////////////////////////////////////////////////////////////
 
