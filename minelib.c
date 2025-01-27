@@ -295,7 +295,6 @@ int score (board_t *Board, int level){
         }
     }
     score *= (level-47);
-    printf("Your current score: %u\n", score);
     return score;
 }
 
