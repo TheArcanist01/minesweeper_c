@@ -51,7 +51,7 @@ typedef struct board {
     unsigned int  Width;        // width of the game board
 
     cell_t       *Cells;        // array containing the game board's cells
-    unsigned RevealedCells; // number of revealed cells
+    unsigned int RevealedCells; // number of revealed cells
 } board_t;
 
 /* structure containing info for scoreboards */
