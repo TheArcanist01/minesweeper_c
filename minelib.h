@@ -6,7 +6,6 @@
 #include <stdbool.h>
 #include <conio.h>
 #include <Windows.h>
-#include <ctype.h>
 
 /* enum containing directions for easier reference */
 typedef enum direction {
@@ -87,7 +86,9 @@ int HowManyToEnd (board_t *Board, int level);
 
 void flag_mode (board_t *Board, unsigned int ColumnIndex, unsigned int RowIndex);
 
-void write_to_file (board_t* Board, int points);
+int compare(const void* a, const void* b);
+
+void best_results(int points);
 
 ///////////////////////////////////////////////////////////////////////////
 
