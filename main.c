@@ -3,6 +3,7 @@
 int main () {
 
     SetConsoleOutputCP(CP_UTF8);
+    srand(time);
     char InputBuffer[1024];
 
     printf("Press 0 to play game, press 1 to load from file\n");
