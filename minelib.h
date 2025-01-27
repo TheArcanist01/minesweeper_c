@@ -54,6 +54,12 @@ typedef struct board {
     unsigned RevealedCells; // number of revealed cells
 } board_t;
 
+/* structure containing info for scoreboards */
+typedef struct score {
+    char *Nick;
+    int Score;
+} score_t;
+
 int generate_random_int (int Min, int Max);
 
 unsigned int get_cell_index (unsigned int RowIndex, unsigned int ColumnIndex, board_t *Board);
@@ -87,7 +93,7 @@ int HowManyToEnd (board_t *Board, int level);
 
 void flag_mode (board_t *Board, unsigned int ColumnIndex, unsigned int RowIndex);
 
-int compare(const void* a, const void* b);
+int compare_scores (const void* a, const void* b);
 
 void best_results(int points);
 
