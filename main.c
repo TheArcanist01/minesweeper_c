@@ -98,9 +98,10 @@ int main () {
     
     flag_cell(&Board->Cells[0]);
     */
+    system("cls");
     print_board(Board);
 
-    score (Board, Difficulty);
+    int CurrentScore = score (Board, Difficulty);
     ///////////////////////////////////////////////////////////////////////////
     char name[50];
     int tmp;
@@ -138,17 +139,26 @@ int main () {
 
         if (mode == 1) {
             if (make_move(Board, Row, Column) == 1){
-                printf("[!] This cell contains a bomb!\n");
+                system("cls");
+                printf("Game over!\n");
+                CurrentScore = score (Board, Difficulty);
+                printf("Your current score: %u\n", CurrentScore);
+                for (int i = 0; i < Board->Height * Board->Width; i++) {
+                    if (Board->Cells[i].bRevealed == false) {
+                        Board->Cells[i].bRevealed = true;
+                    }
+                }
                 print_board(Board);
-                score (Board, Difficulty);
                 break;
             }
         } else if (mode == 2) {
             flag_mode(Board, Column, Row);
         }
 
+        system("cls");
         print_board(Board);
-        score (Board, Difficulty);
+        CurrentScore = score (Board, Difficulty);
+        printf("Your current score: %u\n", CurrentScore);
     }
 
     if (HowManyToEnd(Board, Difficulty) == Board->Height * Board->Width - MineCount){
