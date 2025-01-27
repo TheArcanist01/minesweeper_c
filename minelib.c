@@ -408,14 +408,16 @@ void game_from_file (FILE *Stream) {
 
     unsigned int RowIndex = 0;
     unsigned int ColumnIndex = 0;
+    unsigned int Moves = 0;
 
     while(fscanf(Stream, "\nM %d %d", &RowIndex, &ColumnIndex) == 2) {
         Sleep(250);
         system("cls");
         reveal(&Board->Cells[RowIndex * BoardWidth + ColumnIndex], Board);
+        Moves++;
         if (Board->Cells[RowIndex * BoardWidth + ColumnIndex].bHasMine == true) {
             print_board(Board);
-            printf("Game over!\n");
+            printf("Number of moves = %d\nGame over!\n", Moves);
             return;
         } else {
             print_board(Board);
@@ -425,6 +427,7 @@ void game_from_file (FILE *Stream) {
     system("cls");
     printf("Game result:\n");
     print_board(Board);
+    printf("Number of moves = %d\n", Moves);
 
     free_board(Board);
 
