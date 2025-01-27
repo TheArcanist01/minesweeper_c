@@ -6,6 +6,7 @@
 #include <stdbool.h>
 #include <conio.h>
 #include <Windows.h>
+#include <ctime>
 
 /* enum containing directions for easier reference */
 typedef enum direction {
