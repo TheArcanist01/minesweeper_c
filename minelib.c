@@ -29,8 +29,12 @@ void print_board (board_t *Board) {
         fprintf(stderr, "[!] Error: Can't access game board!\n");
         return;
     }
-
     int CurrentCell = 0;
+
+    for (int i=0; i<Board->Width; i++){
+        printf("%4d ", i);
+    }
+    printf("\n");
 
     for (int i = 0; i < Board->Width; i++) {
         printf("+ ―― ");
@@ -55,7 +59,7 @@ void print_board (board_t *Board) {
             }
             CurrentCell++;
         }
-        printf("|\n");
+        printf("| %2d\n", j);
         for (int l = 0; l < Board->Width; l++) {
             printf("+ ―― ");
         }
@@ -312,16 +316,47 @@ void flag_mode (board_t *Board, unsigned int ColumnIndex, unsigned int RowIndex)
     flag_cell(&Board->Cells[get_cell_index(RowIndex, ColumnIndex, Board)]);
 }
 
-void write_to_file (board_t* Board, int points){ // DO DOKONCZENIA
-    char FileName[100];
-    printf("Enter name of the file:\n");
-    scanf("%s", FileName);
-    FILE* file = fopen(FileName, "w");
-    if (file == NULL){
-        printf("[!] Error: Can't access file!\n");
+int compare(const void* a, const void* b){
+    int scoreA = *((int*)a);
+    int scoreB = *((int*)b);
+    return scoreA-scoreB;
+}
+
+void best_results(int points){ //show 5 best results (points, name)
+    char list[100][2];
+    char names[100][50];
+    int scores[100];
+    int counter=0;
+    char nick[50];
+
+    printf("Enter your nick:\n");
+    fgets(nick, 50, stdin);
+    FILE* f = fopen("res.txt", "a");
+    if (f == NULL){
+        printf("[!] Error: Can't access the file!\n");
+        return;
     }
-    fprintf(file, "%d %d", Board->bWin, points);
+    fprintf(f, "\n%d %s", points, nick);
+    fclose(f);
+
+    FILE* file = fopen("res.txt", "r");
+    if (file == NULL){
+        printf("[!] Error: Can't access the file!\n");
+        return;
+    }
+    while ( fscanf(file, "%d %s", &scores[counter], &names[counter]) == 2){
+        list[counter][0] = counter; //index
+        list[counter][1] = scores[counter]; 
+        counter++;
+    }
     fclose(file);
+    qsort(list, counter, sizeof(list[0]), compare);
+
+    printf("\n    TOP 5   \n");
+    for (int i=0; i<counter && i<5; i++){
+        int index = list[i][0];
+        printf("%d. %s - %dxp\n", i+1, names[index], list[i][1]);
+    }
 }
 
 void game_from_file (FILE *Stream) {
