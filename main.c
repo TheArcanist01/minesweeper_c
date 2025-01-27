@@ -110,7 +110,7 @@ int main () {
     while (HowManyToEnd(Board, Difficulty) < Board->Height * Board->Width - MineCount){
         int mode = 0;
         while (mode == 0){
-            printf("Enter mode: (r to mine; f to flag\n");
+            printf("Enter mode: (r to mine; f to flag)\n");
             tmp = getch();
             if (tmp == 114){
                 mode = 1;
